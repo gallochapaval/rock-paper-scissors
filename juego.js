@@ -9,19 +9,17 @@ let computerSelection = "";
 let computerCounter = 0;
 let playerCounter = 0;
 
+//SCORE ELEMENTS
+const score = document.createElement('h1');
+score.classList.add('score');
+score.textContent = "LET'S BEGIN THE MASSACRE"
+
+const POINTS = document.createElement('h1');
+POINTS.classList.add('POINTS');
+POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter;
+
 //compare & return winORloose
-function playRound(computerSelect) {
-    let playerSelect = window.prompt("What's gonna be your pick? Rock, paper or scissors?");
-    playerSelect.toLowerCase();
-    switch (playerSelect) {
-        case "rock":
-        case "paper":
-        case "scissors":
-            break;
-        default:
-            playerSelect = window.prompt("Sorry but " + playerSelect + " is not a valid pick...pick again");
-            playerSelect.toLowerCase();
-    }
+function playRound(playerSelect,computerSelect) {
     if (playerSelect == "rock" || playerSelect == "paper" || playerSelect == "scissors") {
         if (computerSelect == playerSelect) return "tie";
         else if (computerSelect == "rock") {
@@ -37,61 +35,79 @@ function playRound(computerSelect) {
             else if (playerSelect == "paper") return "loose";
         }
     }
-    else {
-        computerCounter = 5;
-        playerCounter = 0;
-        return ("lost");
-    }
 }
 //play 5 round game showing results
-function game() {
-    for (let i = 0; i < 5; i++) {
+function game(playerSelection) {
+    if (playerCounter < 5 && computerCounter < 5) {
         computerSelection = computerPlay();
-        let winORloose = playRound(computerSelection);
+        let winORloose = playRound(playerSelection,computerSelection);
         if (winORloose == "win") {
             playerCounter++;
-            window.alert("You win this round, the computer chose " + computerSelection + " so the score is:\r\n YOU : " + playerCounter + " - PC : " + computerCounter);
+            score.textContent = "You win this round, the computer chose " + computerSelection;
+            POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter
         }
         else if (winORloose == "loose") {
             computerCounter++;
-            window.alert(" :'( ...You loose this round, the computer chose " + computerSelection + " so the score is:\r\n YOU : " + playerCounter + " - PC : " + computerCounter);
+            score.textContent = " :'( ...You loose this round, the computer chose " + computerSelection;
+            POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter
         }
-        else if (winORloose == "tie"){
-            window.alert("It's a tie! The score is still the same...")
-            i--;
-        }
-        else if (winORloose == "lost"){
-            window.alert("Ok rudeboy, you kept choosing wrongly...");
-            i=5;
+        else if (winORloose == "tie") {
+            score.textContent = "It's a tie! The score is still the same...";
+            POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter
         }
         console.log(winORloose);
         console.log(computerSelection);
     }
-    let playAgain;
-    if (playerCounter > computerCounter) {
-        playAgain = confirm("Congratulations, You Won! Wanna play again?");
+  //GAMEOVER
+    if (playerCounter >= 5) {
+        score.textContent = "Congratulations, You Won! Wanna play again? CLICK HERE!";
+        POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter;
+        score.addEventListener('click', () => reset());
     }
-    else if (playerCounter < computerCounter) {
-        playAgain = confirm("I'm sorry but you lost! Wanna play again?");
-    }
-    if (playAgain) {
-        reset();
-    }
-    else if (!playAgain) {
-        window.alert("Thank you very mucho for playing my juego!");
+    else if (computerCounter >= 5) {
+        score.textContent = "I'm sorry but you lost! Wanna play again? CLICK HERE";
+        POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter
+        score.addEventListener('click', () => reset());
     }
 }
-//welcome message
-if (confirm("Hallo darling, wanna play a 5-round-game of Rock, Paper, Scissors?")){
-    game();
-}
+
 //reset function to play again
 function reset() {
     playerCounter = 0;
     computerCounter = 0;
-    game();
+    score.textContent = "HERE WE GO AGAIN!";
+    POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter;
 }
-//security check...justin case
-if (playerCounter+computerCounter>5){
-    reset();
+
+//new parts 4 UI
+
+const container = document.querySelector('.container');
+
+function removeTransition(e) {
+    if (e.propertyName !== 'transform') return;
+    this.classList.remove('playing');
 }
+
+//button animation function
+function byClick(e) {
+    this.classList.add('playing');
+}
+
+const moves = document.querySelectorAll('.move');
+const rockBtn = document.getElementById('rockBtn');
+const paperBtn = document.getElementById('paperBtn');
+const scissorsBtn = document.getElementById('scissorsBtn');
+
+//button animation call
+moves.forEach(move => move.addEventListener('transitionend', removeTransition));
+moves.forEach(move => move.addEventListener('click', byClick));
+
+//Start the game by clicking on the buttons
+rockBtn.addEventListener('click', () => game('rock'));
+paperBtn.addEventListener('click', () => game('paper'));
+scissorsBtn.addEventListener('click', () => game('scissors'));
+
+
+
+container.appendChild(score);
+container.appendChild(POINTS);
