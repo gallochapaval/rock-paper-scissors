@@ -12,7 +12,7 @@ let playerCounter = 0;
 //SCORE ELEMENTS
 const score = document.createElement('h1');
 score.classList.add('score');
-score.textContent = "LET'S BEGIN THE GAME"
+score.textContent = "The rules are simple: choose from the options above. Paper beats rock, rock beats scissors, scissors beat paper. FIRST TO 5 WINS";
 
 const POINTS = document.createElement('h1');
 POINTS.classList.add('POINTS');
