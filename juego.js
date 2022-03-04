@@ -12,14 +12,18 @@ let playerCounter = 0;
 //SCORE ELEMENTS
 const score = document.createElement('h1');
 score.classList.add('score');
-score.textContent = "LET'S BEGIN THE MASSACRE"
+score.textContent = "LET'S BEGIN THE GAME"
 
 const POINTS = document.createElement('h1');
 POINTS.classList.add('POINTS');
 POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter;
 
+const reStart = document.createElement('h1');
+reStart.classList.add('reStart');
+reStart.textContent = "RESET"
+
 //compare & return winORloose
-function playRound(playerSelect,computerSelect) {
+function playRound(playerSelect, computerSelect) {
     if (playerSelect == "rock" || playerSelect == "paper" || playerSelect == "scissors") {
         if (computerSelect == playerSelect) return "tie";
         else if (computerSelect == "rock") {
@@ -40,7 +44,7 @@ function playRound(playerSelect,computerSelect) {
 function game(playerSelection) {
     if (playerCounter < 5 && computerCounter < 5) {
         computerSelection = computerPlay();
-        let winORloose = playRound(playerSelection,computerSelection);
+        let winORloose = playRound(playerSelection, computerSelection);
         if (winORloose == "win") {
             playerCounter++;
             score.textContent = "You win this round, the computer chose " + computerSelection;
@@ -55,19 +59,22 @@ function game(playerSelection) {
             score.textContent = "It's a tie! The score is still the same...";
             POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter
         }
-        console.log(winORloose);
-        console.log(computerSelection);
+        //console.log(winORloose);
+        //console.log(computerSelection);
     }
-  //GAMEOVER
+
+    //GAMEOVER
     if (playerCounter >= 5) {
-        score.textContent = "Congratulations, You Won! Wanna play again? CLICK HERE!";
+        score.textContent = "Congratulations, You Won!";
         POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter;
-        score.addEventListener('click', () => reset());
+        container.appendChild(reStart);
+        reStart.addEventListener('click', () => reset());
     }
     else if (computerCounter >= 5) {
-        score.textContent = "I'm sorry but you lost! Wanna play again? CLICK HERE";
+        score.textContent = "I'm sorry but you lost!";
         POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter
-        score.addEventListener('click', () => reset());
+        container.appendChild(reStart);
+        reStart.addEventListener('click', () => reset());
     }
 }
 
@@ -77,6 +84,7 @@ function reset() {
     computerCounter = 0;
     score.textContent = "HERE WE GO AGAIN!";
     POINTS.textContent = "YOU : " + playerCounter + " - PC : " + computerCounter;
+    container.removeChild(reStart);
 }
 
 //new parts 4 UI
